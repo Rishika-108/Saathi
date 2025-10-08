@@ -1,0 +1,26 @@
+{
+  "entries": [
+    {
+      "id": 1,
+      "title": "Morning Reflection",
+      "description": "Felt anxious about my upcoming presentation but tried meditation.",
+      "date": "2025-10-08",
+      "analysis": {
+        "emotions": ["Anxious", "Hopeful"],
+        "biases": ["Negativity Bias"],
+        "triggers": ["Upcoming presentation", "Stress from work"]
+      }
+    },
+    {
+      "id": 2,
+      "title": "Evening Thoughts",
+      "description": "Had a fun walk with friends, felt relieved from stress.",
+      "date": "2025-10-07",
+      "analysis": {
+        "emotions": ["Happy", "Relaxed"],
+        "biases": ["Optimism Bias"],
+        "triggers": ["Walk with friends"]
+      }
+    }
+  ]
+}
