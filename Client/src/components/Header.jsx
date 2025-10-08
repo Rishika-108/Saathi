@@ -1,9 +1,12 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+// components/Header.jsx (HACKATHON-POLISHED)
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { useAppContext } from "../context/AppContext"; // Context is the single source of truth
+import AuthModal from "./AuthModal"; 
 import logo from "./saathi-logo.png";
 
-// Navigation links can be passed as props for full dynamic control
+// Navigation links configuration
 const defaultLinks = {
   loggedIn: [
     { name: "Dashboard", path: "/dashboard" },
@@ -11,115 +14,40 @@ const defaultLinks = {
   ],
   guest: [
     { name: "Home", path: "/" },
-    { name: "Login", path: "#" },
+    { name: "Login", path: "#" }, // Login triggers modal
   ],
 };
 
-// Simulate async authentication (replace with real API)
-const authenticateUser = async (username, password) => {
-  // Simulate network delay
-  await new Promise((res) => setTimeout(res, 500));
-  // Replace with real authentication logic
-  return username === "admin" && password === "password";
-};
-
-const Header = ({
-  page,
-  isLoggedIn,
-  setIsLoggedIn,
-  navLinks = defaultLinks,
-}) => {
+const Header = ({ navLinks = defaultLinks }) => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
-  const [loginForm, setLoginForm] = useState({ username: "", password: "" });
-  const [loginError, setLoginError] = useState("");
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const modalRef = useRef(null);
+  const location = useLocation();
 
-  // Accessibility: Trap focus in modal
+  // Unified AuthModal state via context
+  const { isLoggedIn, logout, isAuthModalOpen, openAuthModal, closeAuthModal } = useAppContext();
+
+  // Redirect logic after login/logout
   useEffect(() => {
-    if (loginModalOpen && modalRef.current) {
-      modalRef.current.focus();
+    if (isLoggedIn && location.pathname === "/") {
+      navigate("/journal");
+    } else if (
+      !isLoggedIn &&
+      (location.pathname === "/dashboard" || location.pathname === "/journal")
+    ) {
+      navigate("/");
     }
-  }, [loginModalOpen]);
-
-  // Handle Escape key to close modal
-  useEffect(() => {
-    const handleEsc = (e) => {
-      if (e.key === "Escape") setLoginModalOpen(false);
-    };
-    if (loginModalOpen) {
-      window.addEventListener("keydown", handleEsc);
-      return () => window.removeEventListener("keydown", handleEsc);
-    }
-  }, [loginModalOpen]);
-
-  // Trap focus inside modal
-  useEffect(() => {
-    if (!loginModalOpen) return;
-    const focusableElements = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
-    const modal = modalRef.current;
-    const firstElement = modal?.querySelectorAll(focusableElements)[0];
-    const elements = modal?.querySelectorAll(focusableElements);
-    const lastElement = elements?.[elements.length - 1];
-
-    const handleTab = (e) => {
-      if (e.key !== "Tab") return;
-      if (!elements) return;
-      if (e.shiftKey) {
-        if (document.activeElement === firstElement) {
-          e.preventDefault();
-          lastElement.focus();
-        }
-      } else {
-        if (document.activeElement === lastElement) {
-          e.preventDefault();
-          firstElement.focus();
-        }
-      }
-    };
-    modal?.addEventListener("keydown", handleTab);
-    return () => modal?.removeEventListener("keydown", handleTab);
-  }, [loginModalOpen]);
+  }, [isLoggedIn, navigate, location.pathname]);
 
   const toggleMenu = () => setMenuOpen((open) => !open);
 
-  const handleInputChange = (e) => {
-    setLoginForm({ ...loginForm, [e.target.name]: e.target.value });
-  };
-
-  const handleLoginSubmit = async (e) => {
-    e.preventDefault();
-    setLoginError("");
-    setLoading(true);
-    if (!loginForm.username || !loginForm.password) {
-      setLoginError("Please fill in all fields.");
-      setLoading(false);
-      return;
-    }
-    // Simulate async authentication
-    const success = await authenticateUser(loginForm.username, loginForm.password);
-    console.log("Login success:", success); // Debug line
-    setLoading(false);
-    if (success) {
-      setIsLoggedIn(true);
-      setLoginModalOpen(false); // Close the popup
-      setLoginForm({ username: "", password: "" });
-      navigate("/journal"); // Navigate to /journal
-    } else {
-      setLoginError("Invalid credentials.");
-    }
-  };
-
   const handleLogout = () => {
-    setIsLoggedIn(false);
-    setLoginForm({ username: "", password: "" });
-    // Example: localStorage.removeItem("token");
-    navigate("/");
+    logout();
+    navigate("/"); // Immediate page update on logout
   };
 
+  // Links based on login state
   const links = isLoggedIn ? navLinks.loggedIn : navLinks.guest;
+  const currentPageName = links.find((link) => link.path === location.pathname)?.name;
 
   return (
     <>
@@ -132,30 +60,31 @@ const Header = ({
 
           {/* Desktop nav */}
           <nav className="hidden md:flex space-x-6 items-center" aria-label="Main navigation">
-            {links.map((link, idx) =>
+            {links.map((link) =>
               link.name === "Login" ? (
                 <button
-                  key={idx}
-                  onClick={() => setLoginModalOpen(true)}
+                  key={link.name}
+                  onClick={openAuthModal} // Open modal via context
                   className="font-medium text-gray-700 hover:text-[#a1866f] transition"
                   aria-haspopup="dialog"
-                  aria-controls="login-modal"
+                  aria-controls="auth-modal"
                 >
                   {link.name}
                 </button>
               ) : (
                 <Link
-                  key={idx}
+                  key={link.name}
                   to={link.path}
                   className={`font-medium text-gray-700 hover:text-[#a1866f] transition ${
-                    page === link.name ? "text-[#a1866f]" : ""
+                    currentPageName === link.name ? "font-bold text-[#a1866f]" : ""
                   }`}
-                  aria-current={page === link.name ? "page" : undefined}
+                  aria-current={currentPageName === link.name ? "page" : undefined}
                 >
                   {link.name}
                 </Link>
               )
             )}
+
             {isLoggedIn && (
               <button
                 onClick={handleLogout}
@@ -167,7 +96,7 @@ const Header = ({
             )}
           </nav>
 
-          {/* Mobile menu */}
+          {/* Mobile menu button */}
           <div className="md:hidden">
             <button
               onClick={toggleMenu}
@@ -181,33 +110,30 @@ const Header = ({
           </div>
         </div>
 
+        {/* Mobile Menu */}
         {menuOpen && (
-          <div
-            id="mobile-menu"
-            className="md:hidden bg-white shadow-md px-4 py-4 space-y-3 z-50"
-            role="menu"
-          >
-            {links.map((link, idx) =>
+          <div id="mobile-menu" className="md:hidden bg-white shadow-md px-4 py-4 space-y-3 z-50" role="menu">
+            {links.map((link) =>
               link.name === "Login" ? (
                 <button
-                  key={idx}
+                  key={link.name}
                   onClick={() => {
-                    setLoginModalOpen(true);
+                    openAuthModal();
                     setMenuOpen(false);
                   }}
                   className="block text-gray-700 font-medium hover:text-[#a1866f] w-full text-left"
                   aria-haspopup="dialog"
-                  aria-controls="login-modal"
+                  aria-controls="auth-modal"
                 >
                   {link.name}
                 </button>
               ) : (
                 <Link
-                  key={idx}
+                  key={link.name}
                   to={link.path}
                   onClick={() => setMenuOpen(false)}
                   className="block text-gray-700 font-medium hover:text-[#a1866f]"
-                  aria-current={page === link.name ? "page" : undefined}
+                  aria-current={currentPageName === link.name ? "page" : undefined}
                 >
                   {link.name}
                 </Link>
@@ -230,76 +156,8 @@ const Header = ({
         )}
       </header>
 
-      {/* Login Modal */}
-      {loginModalOpen && (
-        <div
-          id="login-modal"
-          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-          onClick={() => setLoginModalOpen(false)}
-          tabIndex={-1}
-          aria-modal="true"
-          role="dialog"
-        >
-          <div
-            ref={modalRef}
-            className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative mx-4"
-            onClick={(e) => e.stopPropagation()}
-            tabIndex={0}
-          >
-            <button
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-3xl font-bold"
-              onClick={() => setLoginModalOpen(false)}
-              aria-label="Close login modal"
-            >
-              &times;
-            </button>
-
-            <h2 className="text-3xl font-bold mb-6 text-center text-[#4a3f35] font-serif">
-              Welcome Back!
-            </h2>
-
-            <form onSubmit={handleLoginSubmit} className="flex flex-col gap-4">
-              <input
-                type="text"
-                name="username"
-                value={loginForm.username}
-                onChange={handleInputChange}
-                placeholder="Email or Username"
-                className="w-full px-4 py-3 border rounded-xl outline-none focus:border-[#a1866f] focus:ring-1 focus:ring-[#a1866f] transition"
-                required
-                autoFocus
-                aria-label="Email or Username"
-                disabled={loading}
-              />
-              <input
-                type="password"
-                name="password"
-                value={loginForm.password}
-                onChange={handleInputChange}
-                placeholder="Password"
-                className="w-full px-4 py-3 border rounded-xl outline-none focus:border-[#a1866f] focus:ring-1 focus:ring-[#a1866f] transition"
-                required
-                aria-label="Password"
-                disabled={loading}
-              />
-              {loginError && (
-                <span className="text-red-500 text-sm">{loginError}</span>
-              )}
-              <button
-                type="submit"
-                className="w-full bg-[#a1866f] text-white py-3 rounded-xl font-semibold hover:bg-[#8b715b] transition-all"
-                aria-label="Login"
-                disabled={loading}
-              >
-                {loading ? "Logging in..." : "Login"}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Spacer only if the page doesn’t already have padding */}
-<div className={`${page === "Home" ? "h-16 md:h-20" : "h-0"}`}></div>
+      {/* Auth Modal (controlled via context) */}
+      <AuthModal isOpen={isAuthModalOpen} onClose={closeAuthModal} />
     </>
   );
 };

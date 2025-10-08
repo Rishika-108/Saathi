@@ -25,19 +25,7 @@ function Footer({ isLoggedIn }) {
           <span className="text-2xl font-bold font-serif tracking-wide">Saathi</span>
         </div>
 
-        {/* Navigation Links */}
-        <nav className="flex flex-wrap justify-center gap-5 text-sm font-medium">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              to={link.path}
-              className="relative group hover:text-[#a1866f] transition"
-            >
-              {link.name}
-              <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[#a1866f] group-hover:w-full transition-all duration-300"></span>
-            </Link>
-          ))}
-        </nav>
+        
 
         {/* Social Icons */}
         <div className="flex space-x-5 text-xl">
