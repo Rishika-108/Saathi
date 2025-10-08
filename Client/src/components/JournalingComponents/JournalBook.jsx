@@ -5,14 +5,20 @@ export default function JournalBook({ onSave }) {
   const [description, setDescription] = useState("");
   const date = new Date().toLocaleDateString();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const entry = { title, description, date };
-    console.log("Journal Entry:", entry);
-    if (onSave) onSave(entry);
-    setTitle("");
-    setDescription("");
-  };
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  const entry = await addJournalEntry(title, description); // API call
+  if (!entry) return alert("Failed to save journal.");
+
+  // Analyze the journal
+  const insights = await analyzeJournal(entry._id);
+  setInsightCardData(insights);
+  setShowInsightCard(true);
+
+  setTitle("");
+  setDescription("");
+};
+
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-[#faf3e0] to-[#f0e5cf] p-6">
