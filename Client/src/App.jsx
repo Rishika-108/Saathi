@@ -1,38 +1,28 @@
-import React, { useState } from "react";
+// App.jsx (MODIFIED)
+import React from "react";
 import { Routes, Route } from "react-router-dom";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import { AppProvider } from "./context/AppContext";
+import Layout from "./components/Layout"; // ✨ New import
+
+// Imports for pages (Good candidates for lazy loading, but keeping as is for now)
 import Home from "./pages/Home/Home";
 import Journal from "./pages/Journaling/Journal";
 import Dashboard from "./pages/Dashboard/Dashboard";
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   return (
-    <>
-      {/* Header will dynamically update based on login */}
-      <Header
-        page={isLoggedIn ? "Other" : "Home"}
-        isLoggedIn={isLoggedIn}
-        setIsLoggedIn={setIsLoggedIn}
-      />
-
-      <main className="mt-20">
-        <Routes>
-          {/* Pass setIsLoggedIn to Home for Hero CTA */}
-          <Route
-            path="/"
-            element={<Home isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}
-          />
+    <AppProvider>
+      {/* 🚨 VULNERABILITY FIX: Remove Header, Footer, and main wrapper */}
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
           <Route path="/journal" element={<Journal />} />
           <Route path="/dashboard" element={<Dashboard />} />
-        </Routes>
-      </main>
-
-      {/* Footer dynamically updates links based on login */}
-      <Footer isLoggedIn={isLoggedIn} />
-    </>
+          {/* Add a 404 route for robustness */}
+          <Route path="*" element={<div>404: Not Found</div>} />
+        </Route>
+      </Routes>
+    </AppProvider>
   );
 };
 

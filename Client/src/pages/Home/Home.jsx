@@ -1,15 +1,21 @@
+// pages/Home/Home.jsx (MODIFIED)
 import React from "react";
+// We don't need useAppContext here, as child components handle state
 import HeroSection from "../../components/homeComponents/HeroSection";
 import AboutUs from "../../components/homeComponents/AboutUs";
 import FeaturesSection from "../../components/homeComponents/FeaturesSection";
 
-function Home({ isLoggedIn , setIsLoggedIn }) {
-  const page = isLoggedIn ? "Other" : "Home";
+// 🚨 VULNERABILITY FIX: Remove prop drilling (isLoggedIn, setIsLoggedIn)
+function Home() {
+  // 🚨 VULNERABILITY FIX: Remove unnecessary 'page' calculation
+  // const page = isLoggedIn ? "Other" : "Home"; 
 
   return (
-    <div className="mt-20 p-4">
-      <HeroSection setIsLoggedIn={setIsLoggedIn} />
-      <AboutUs/>
+    // 🚨 VULNERABILITY FIX: Remove mt-20; it should be on the main wrapper (see App.jsx change)
+    <div className="p-4"> 
+      {/* 🚨 VULNERABILITY FIX: Remove prop drilling */}
+      <HeroSection /> 
+      <AboutUs />
       <FeaturesSection />
     </div>
   );

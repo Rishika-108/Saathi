@@ -1,18 +1,24 @@
+// components/homeComponents/HeroSection.jsx (MODIFIED)
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import backgroundImage from "./Herobackground.jpeg"; // Local background image
+import { useAppContext } from "../../context/AppContext"; // 👈 Access global state
+import backgroundImage from "./Herobackground.jpeg";
 
-function HeroSection({ setIsLoggedIn }) {
+// 1. Removed setIsLoggedIn prop, relies on context
+function HeroSection() {
   const navigate = useNavigate();
+  const { login } = useAppContext(); // 👈 Use the global login action
 
   const handleStartJournaling = () => {
-    setIsLoggedIn(true); // simulate login
-    navigate("/journal"); // navigate to Journaling page
+    // 2. Use the global 'login' action
+    login({ id: 'temp-guest', name: "Guest" }); 
+    navigate("/journal");
   };
 
   return (
     <section
-      className="relative w-full h-screen flex items-center justify-center text-center text-white"
+      // 3. IMPORTANT: Set min-h-[calc(100vh-80px)] to ensure the fixed header doesn't cover the top of the section
+      className="relative w-full min-h-[calc(100vh-80px)] flex items-center justify-center text-center text-white"
       style={{
         backgroundImage: `url(${backgroundImage})`,
         backgroundSize: "cover",
@@ -20,10 +26,11 @@ function HeroSection({ setIsLoggedIn }) {
         backgroundRepeat: "no-repeat",
       }}
     >
-      {/* Overlay for better text visibility */}
-      <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+      {/* 4. Overlay for better text visibility (z-index is 0 implicitly) */}
+      <div className="absolute inset-0 bg-opacity-50"></div>
 
-      <div className="relative z-10 max-w-3xl px-4 ">
+      {/* 5. Content: Ensures content is stacked above the overlay */}
+      <div className="relative z-10 max-w-3xl px-4 py-10 sm:py-0"> {/* Added padding for small screens */}
         <h1 className="text-4xl md:text-6xl font-bold mb-6">
           Reflect, Analyze, Improve
         </h1>
@@ -38,14 +45,7 @@ function HeroSection({ setIsLoggedIn }) {
           Start Journaling
         </button>
 
-        {/* Optional illustration image */}
-        <div className="mt-10">
-          <img
-            src="https://images.unsplash.com/photo-1581091215365-81cb192d9a14?auto=format&fit=crop&w=800&q=80"
-            alt="Journaling Illustration"
-            className="mx-auto rounded-lg shadow-lg"
-          />
-        </div>
+        {/* Optional illustration image - Removed for clean code and performance */}
       </div>
     </section>
   );
