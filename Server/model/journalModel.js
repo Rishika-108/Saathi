@@ -14,7 +14,7 @@ const SolutionSchema = new mongoose.Schema({
       stepNumber: { type: Number, required: true },
       description: { type: String, required: true }
     }
-  ], 
+  ],
     status : {type: String, enum: ['pending', 'completed', 'dismissed'], default: 'pending'}
 })
 
