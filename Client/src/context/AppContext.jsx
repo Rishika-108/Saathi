@@ -33,9 +33,9 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const register = async (email, username, password) => {
+  const register = async (email, name, password) => {
     try {
-      const res = await axios.post(`${API_BASE}/user/register`, { email, username, password });
+      const res = await axios.post(`${API_BASE}/user/register`, { email, name, password });
       const user = res.data;
 
       setCurrentUser(user);
@@ -76,7 +76,7 @@ export const AppProvider = ({ children }) => {
     try {
       const res = await axios.post(
         `${API_BASE}/journal/create`,
-        { title, description },
+        { text },
         { headers: { Authorization: `Bearer ${currentUser.token}` } }
       );
       setJournalEntries(prev => [res.data, ...prev]);

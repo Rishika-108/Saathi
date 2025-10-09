@@ -1,4 +1,3 @@
-// components/AuthModal.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { FaTimes } from "react-icons/fa";
 import { useAppContext } from "../context/AppContext";
@@ -19,16 +18,15 @@ const AuthModal = () => {
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [formData, setFormData] = useState({
     email: "",
-    username: "",
-    password: "",
-    confirmPassword: ""
+    name: "",
+    password: ""
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   // Reset form when modal opens or mode changes
   useEffect(() => {
-    setFormData({ email: "", username: "", password: "", confirmPassword: "" });
+    setFormData({ email: "", name: "", password: "" });
     setError("");
   }, [isAuthModalOpen, isLoginMode]);
 
@@ -57,22 +55,18 @@ const AuthModal = () => {
     setError("");
     setLoading(true);
 
-    const { email, username, password, confirmPassword } = formData;
+    const { email, name, password } = formData;
 
     // Client-side validation
     if (isLoginMode) {
-      if (!password || (!username && !email)) {
-        setError("Please enter your password and username/email.");
+      if (!password || (!name && !email)) {
+        setError("Please enter your password and name/email.");
         setLoading(false);
         return;
       }
     } else {
-      if (!email || !username || !password || !confirmPassword) {
-        setError("Please fill in all registration fields.");
-        setLoading(false);
-        return;
-      } else if (password !== confirmPassword) {
-        setError("Passwords do not match.");
+      if (!email || !name || !password) {
+        setError("Please fill in all fields.");
         setLoading(false);
         return;
       } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -84,10 +78,10 @@ const AuthModal = () => {
 
     try {
       if (isLoginMode) {
-        const user = await contextLogin(username || email, password);
+        const user = await contextLogin(name || email, password);
         if (!user) setError("Invalid credentials.");
       } else {
-        const user = await contextRegister(email, username, password);
+        const user = await contextRegister(email, name, password);
         if (!user) setError("Registration failed. Email may already exist.");
       }
     } catch (err) {
@@ -129,7 +123,7 @@ const AuthModal = () => {
           {isLoginMode ? "New user? " : "Already have an account? "}
           <button
             type="button"
-            onClick={() => setIsLoginMode(prev => !prev)}
+            onClick={() => setIsLoginMode((prev) => !prev)}
             className="text-[#a1866f] hover:text-[#8b715b] font-semibold transition"
           >
             {isLoginMode ? "Register" : "Login"}
@@ -152,10 +146,10 @@ const AuthModal = () => {
 
           <input
             type="text"
-            name="username"
-            value={formData.username}
+            name="name"
+            value={formData.name}
             onChange={handleInputChange}
-            placeholder={isLoginMode ? "Username or Email" : "Username (For Display)"}
+            placeholder={isLoginMode ? "Name or Email" : "Your Name"}
             className="w-full px-4 py-3 border rounded-xl outline-none focus:border-[#a1866f] transition"
             required
             disabled={loading}
@@ -172,19 +166,6 @@ const AuthModal = () => {
             required
             disabled={loading}
           />
-
-          {!isLoginMode && (
-            <input
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleInputChange}
-              placeholder="Confirm Password"
-              className="w-full px-4 py-3 border rounded-xl outline-none focus:border-[#a1866f] transition"
-              required
-              disabled={loading}
-            />
-          )}
 
           {error && <span className="text-red-500 text-sm">{error}</span>}
 
