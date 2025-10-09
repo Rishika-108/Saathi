@@ -18,7 +18,7 @@ export const AppProvider = ({ children }) => {
   // ----- Auth -----
   const login = async (identifier, password) => {
     try {
-      const res = await axios.post(`${API_BASE}/user/login`, { identifier, password });
+      const res = await axios.post(`${API_BASE}/user/login`, { email:identifier, password });
       const user = res.data;
 
       setCurrentUser(user);
