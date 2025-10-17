@@ -72,7 +72,7 @@
 
 import fetch from "node-fetch";
 
-const API_KEY = process.env.GEMINI_API_KEY || "AIzaSyDuO6a_CI42UYasUgCBa99kTXuL-WfzAGc";
+const API_KEY = process.env.GEMINI_API_KEY;
 
 export async function analyzeJournal(journalText) {
   if (!journalText) throw new Error("Missing journal text");
