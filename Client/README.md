@@ -1,4 +1,4 @@
-# 🌿 Saathi – Your Digital Self-Help Companion
+# Saathi – Your Digital Self-Help Companion
 
 **Saathi** is a personal growth and self-reflection web app that helps users understand themselves better through journaling and guided insights.  
 It analyzes your journal entries and provides **personalized reflections, key takeaways, and actionable suggestions** — helping you grow emotionally, mentally, and mindfully.
@@ -12,17 +12,17 @@ By writing daily journals, users can observe their emotions and thoughts over ti
 
 ## Features
 
-- 📝 **Journal Writing** – Write and save your daily reflections in a calm, clutter-free editor.  
-- 🧠 **Mood & Sentiment Analysis** – Understand emotional tones in your entries.  
-- 💡 **Personal Insights** – Get personalized suggestions to promote mindfulness and growth.  
-- 🔒 **Private & Secure** – All journals remain personal to the user.  
-- 📊 **Progress Overview** – View trends and recurring themes over time.  
-- 🎨 **Soothing Design** – Minimal, soft color palette for a peaceful writing experience.  
-- 📱 **Responsive Interface** – Works smoothly across desktop and mobile devices.
+-  **Journal Writing** – Write and save your daily reflections in a calm, clutter-free editor.  
+-  **Mood & Sentiment Analysis** – Understand emotional tones in your entries.  
+-  **Personal Insights** – Get personalized suggestions to promote mindfulness and growth.  
+-  **Private & Secure** – All journals remain personal to the user.  
+-  **Progress Overview** – View trends and recurring themes over time.  
+-  **Soothing Design** – Minimal, soft color palette for a peaceful writing experience.  
+-  **Responsive Interface** – Works smoothly across desktop and mobile devices.
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 ```
 
 Saathi/
@@ -39,7 +39,7 @@ Saathi/
 ````
 
 
-## 🛠️ Technologies Used
+##  Technologies Used
 
 - **React + Vite** – Frontend framework and project setup  
 - **JavaScript (ES6+)** – Application logic  
@@ -49,7 +49,7 @@ Saathi/
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 - Node.js and npm installed  
@@ -68,7 +68,7 @@ Then open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ---
 
-## 💡 How It Works
+##  How It Works
 
 1. **Write Your Journal**
    Express your thoughts freely — daily reflections, gratitude, or emotions.
@@ -82,7 +82,7 @@ Then open [http://localhost:5173](http://localhost:5173) in your browser.
 4. **Reflect & Repeat**
    Revisit old entries and observe your personal growth over time.
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions are always welcome!
 
@@ -94,12 +94,12 @@ If you’d like to contribute:
 4. Push to your fork
 5. Submit a Pull Request
 
-## 📜 License
+##  License
 
 This project is open source under the **MIT License**.
 Feel free to use and modify it for personal learning or self-help projects.
 
-## 💚 Inspiration
+##  Inspiration
 
 Saathi was inspired by the idea that **growth begins with awareness**.
 Journaling can be the bridge between emotion and understanding —
@@ -108,7 +108,7 @@ and Saathi helps you walk that bridge one reflection at a time.
 *"Be your own companion on the journey within."*
 
 
-## 👩‍💻 Author
+##  Author
 
 **Rishika Thakur**
 [GitHub – Rishika-108](https://github.com/Rishika-108)
