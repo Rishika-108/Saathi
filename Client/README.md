@@ -112,6 +112,3 @@ and Saathi helps you walk that bridge one reflection at a time.
 
 **Rishika Thakur**
 [GitHub – Rishika-108](https://github.com/Rishika-108)
-
-Would you like me to make a **shorter GitHub “About” section** (1-line description + topics) to go with this too? It’ll appear right under your repo name.
-```
